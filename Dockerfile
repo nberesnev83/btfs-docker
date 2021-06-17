@@ -1,7 +1,7 @@
 FROM debian:latest
 MAINTAINER Nikolay Bereznyak "beresnevn70@gmail.com"
 
-RUN apt-get update && apt-get -y install openssh-server supervisor mc wget
+RUN apt-get update && apt-get -y install openssh-server supervisor mc wget curl
 RUN mkdir /var/run/sshd
 RUN echo 'root:password' | chpasswd
 RUN sed -i 's|#Port 22|Port 22|' /etc/ssh/sshd_config
@@ -29,6 +29,12 @@ RUN sed -i 's|#Compression delayed|Compression delayed|' /etc/ssh/sshd_config
 RUN sed -i 's|#ClientAliveInterval 0|ClientAliveInterval 0|' /etc/ssh/sshd_config
 RUN sed -i 's|#ClientAliveCountMax 3|ClientAliveCountMax 3|' /etc/ssh/sshd_config
 RUN sed -i 's|#UseDNS no|UseDNS no|' /etc/ssh/sshd_config
+
+# Download and install btfs
+RUN mkdir /opt/btfs
+RUN cd /opt/btrfs
+RUN wget https://raw.githubusercontent.com/TRON-US/btfs-binary-releases/master/install.sh
+RUN bash install.sh -o linux -a amd64
 
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
