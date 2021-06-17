@@ -48,4 +48,5 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 22
 ENV BTFS_PATH="/opt/btfs"
+ENV ENABLE_WALLET_REMOTE="true"
 CMD ["/usr/bin/supervisord"]
