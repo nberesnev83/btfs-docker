@@ -32,9 +32,14 @@ RUN sed -i 's|#UseDNS no|UseDNS no|' /etc/ssh/sshd_config
 
 # Download and install btfs
 RUN mkdir -p /opt/btfs
+RUN mkdir -p /etc/btfs
 RUN cd /opt/btfs
 RUN wget https://raw.githubusercontent.com/TRON-US/btfs-binary-releases/master/install.sh
 RUN bash install.sh -o linux -a amd64
+RUN mv /root/btfs/bin/fs-repo-migrations /usr/bin/fs-repo-migrations
+RUN mv /root/btfs/bin/btfs /usr/bin/btfs
+RUN mv /root/btfs/bin/config.yaml /etc/btfs/config.yaml
+RUN rm -rf /root/btfs
 
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
@@ -42,4 +47,5 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 22
+ENV BTFS_PATH="/opt/btfs"
 CMD ["/usr/bin/supervisord"]
