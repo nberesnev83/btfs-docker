@@ -41,12 +41,16 @@ RUN mv /root/btfs/bin/btfs /usr/bin/btfs
 RUN mv /root/btfs/bin/config.yaml /etc/btfs/config.yaml
 RUN rm -rf /root/btfs
 
+# initiate environment
+RUN echo 'BTFS_PATH="/opt/btfs"' >> /etc/environment
+RUN echo 'ENABLE_WALLET_REMOTE="true"' >> /etc/environment
+RUN BTFS_PATH="/opt/btfs" /usr/bin/btfs --config /etc/btfs/config.yaml init
+
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-EXPOSE 22
-ENV BTFS_PATH="/opt/btfs"
-ENV ENABLE_WALLET_REMOTE="true"
+EXPOSE 22, 5001
+VOLUME /opt/btfs
 CMD ["/usr/bin/supervisord"]
