@@ -31,7 +31,7 @@ RUN sed -i 's|#ClientAliveCountMax 3|ClientAliveCountMax 3|' /etc/ssh/sshd_confi
 RUN sed -i 's|#UseDNS no|UseDNS no|' /etc/ssh/sshd_config
 
 # Download and install btfs
-RUN mkdir /opt/btfs
+RUN mkdir -p /opt/btfs
 RUN cd /opt/btrfs
 RUN wget https://raw.githubusercontent.com/TRON-US/btfs-binary-releases/master/install.sh
 RUN bash install.sh -o linux -a amd64
