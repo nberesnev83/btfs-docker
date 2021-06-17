@@ -32,7 +32,7 @@ RUN sed -i 's|#UseDNS no|UseDNS no|' /etc/ssh/sshd_config
 
 # Download and install btfs
 RUN mkdir -p /opt/btfs
-RUN cd /opt/btrfs
+RUN cd /opt/btfs
 RUN wget https://raw.githubusercontent.com/TRON-US/btfs-binary-releases/master/install.sh
 RUN bash install.sh -o linux -a amd64
 
