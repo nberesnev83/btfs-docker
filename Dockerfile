@@ -58,5 +58,5 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 EXPOSE 22
 EXPOSE 5001
 VOLUME /opt/btfs
-CMD ["/usr/bin/supervisord"]
+ENTRYPOINT ["/usr/bin/supervisord"]
 CMD ["/usr/bin/btfs", "daemon"]
