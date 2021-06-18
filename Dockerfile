@@ -51,6 +51,7 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-EXPOSE 22, 5001
+EXPOSE 22
+EXPOSE 5001
 VOLUME /opt/btfs
 CMD ["/usr/bin/supervisord"]
