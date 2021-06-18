@@ -24,7 +24,9 @@ if [ ! -f "/opt/btfs/config" ]; then
 
     BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon
     status=$?
-else
+fi
+
+if [ -f "/opt/btfs/config" ]; then
     BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon
     status=$?
 fi
