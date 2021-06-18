@@ -1,9 +1,10 @@
 FROM debian:latest
 MAINTAINER Nikolay Bereznyak "beresnevn70@gmail.com"
+ENV TZ=Asia/Barnaul
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN apt-get install -y -q
-RUN apt-get update && apt-get full-upgrade -y && apt-get -y install openssh-server supervisor mc wget curl
+RUN apt-get update && apt-get full-upgrade -y && apt-get -y install openssh-server mc wget curl net-tools
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 RUN mkdir /var/run/sshd
@@ -53,9 +54,13 @@ RUN BTFS_PATH="/opt/btfs" /usr/bin/btfs init
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ENV NOTVISIBLE="in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
 
 EXPOSE 22
 EXPOSE 5001
 VOLUME /opt/btfs
-CMD ["/usr/bin/supervisord", "start", "/usr/bin/btfs", "daemon"]
+COPY run.sh run.sh
+RUN  chmod +x run.sh
+ 
+CMD  ./run.sh
