@@ -9,23 +9,23 @@ fi
 
 if [[ ! -f "/opt/btfs/config" ]]; then
     if [[ "$NEW_WALLET" == "true" ]]; then
-        BTFS_PATH="/opt/btfs" /usr/bin/btfs init
+        ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs init
         status=$?
     elif [[ -n "$MNEMONIC_WORDS" ]]; then
-        BTFS_PATH="/opt/btfs" /usr/bin/btfs init -s "$MNEMONIC_WORDS"
+        ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs init -s "$MNEMONIC_WORDS"
         status=$?
     elif [[ -n "$PRIVATE_KEY" ]]; then
-        BTFS_PATH="/opt/btfs" /usr/bin/btfs init -i "$PRIVATE_KEY"
+        ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs init -i "$PRIVATE_KEY"
         status=$?
     else
-        BTFS_PATH="/opt/btfs" /usr/bin/btfs init
+        ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs init
         status=$?
     fi
 
-    BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon
+    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon
     status=$?
 else
-    BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon
+    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon
     status=$?
 fi
 
