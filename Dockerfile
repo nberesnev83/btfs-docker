@@ -3,7 +3,9 @@ MAINTAINER Nikolay Bereznyak "beresnevn70@gmail.com"
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN apt-get install -y -q
-RUN apt-get update && apt-get -y install openssh-server supervisor mc wget curl
+RUN apt-get update && apt-get full-upgrade && apt-get -y install openssh-server supervisor mc wget curl
+RUN apt-get clean
+RUN rm -rf /var/lib/apt/lists/*
 RUN mkdir /var/run/sshd
 RUN echo 'root:password' | chpasswd
 RUN sed -i 's|#Port 22|Port 22|' /etc/ssh/sshd_config
