@@ -22,9 +22,6 @@ if [[ ! -f "/opt/btfs/config" ]]; then
         status=$?
     fi
 
-    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon &
-    status=$?
-
     if [[ -n "$DOMAINAPI" ]]; then
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://$DOMAINAPI:5001", "http://0.0.0.0:5001"]'
     else
@@ -40,12 +37,10 @@ if [[ ! -f "/opt/btfs/config" ]]; then
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs config profile apply storage-host
     fi
 
-    killall -9 btfs
-    sleep 10
-    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon &
+    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon
     status=$?
 else
-    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon &
+    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon
     status=$?
 fi
 
