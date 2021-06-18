@@ -9,16 +9,16 @@ fi
 
 if [[ ! -f "/opt/btfs/config" ]]; then
     if [[ "$NEW_WALLET" == "true" ]]; then
-        RUN BTFS_PATH="/opt/btfs" /usr/bin/btfs init
+        BTFS_PATH="/opt/btfs" /usr/bin/btfs init
         status=$?
     elif [[ -n "$MNEMONIC_WORDS" ]]; then
-        RUN BTFS_PATH="/opt/btfs" /usr/bin/btfs init -s "$MNEMONIC_WORDS"
+        BTFS_PATH="/opt/btfs" /usr/bin/btfs init -s "$MNEMONIC_WORDS"
         status=$?
     elif [[ -n "$PRIVATE_KEY" ]]; then
-        RUN BTFS_PATH="/opt/btfs" /usr/bin/btfs init -i "$PRIVATE_KEY"
+        BTFS_PATH="/opt/btfs" /usr/bin/btfs init -i "$PRIVATE_KEY"
         status=$?
     else
-        RUN BTFS_PATH="/opt/btfs" /usr/bin/btfs init
+        BTFS_PATH="/opt/btfs" /usr/bin/btfs init
         status=$?
     fi
 
