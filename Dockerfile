@@ -44,7 +44,7 @@ RUN rm -rf /root/btfs
 # initiate environment
 RUN echo 'BTFS_PATH="/opt/btfs"' >> /etc/environment
 RUN echo 'ENABLE_WALLET_REMOTE="true"' >> /etc/environment
-RUN BTFS_PATH="/opt/btfs" /usr/bin/btfs --config /etc/btfs/config.yaml init
+RUN BTFS_PATH="/opt/btfs" /usr/bin/btfs init
 
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
