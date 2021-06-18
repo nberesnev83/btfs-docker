@@ -59,3 +59,4 @@ EXPOSE 22
 EXPOSE 5001
 VOLUME /opt/btfs
 CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/btfs", "daemon"]
