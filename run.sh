@@ -7,9 +7,28 @@ if [ $status -ne 0 ]; then
     exit $status
 fi
 
-BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon
-status=$?
-if [ $status -ne 0 ]; then
-    echo "Failed to start btfs: $status"
-    exit $status
+if [ ! -f "/opt/btfs/config" ]; then
+    if [ $NEW_WALLET == true ]; then
+        RUN BTFS_PATH="/opt/btfs" /usr/bin/btfs init
+    else if [ -n $MNEMONIC_WORDS ]; then
+        RUN BTFS_PATH="/opt/btfs" /usr/bin/btfs init -s $MNEMONIC_WORDS
+    else if [ -n $PRIVATE_KEY ]; then
+        RUN BTFS_PATH="/opt/btfs" /usr/bin/btfs init -i $PRIVATE_KEY
+    else
+        RUN BTFS_PATH="/opt/btfs" /usr/bin/btfs init
+    fi
+
+    BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon
+    status=$?
+    if [ $status -ne 0 ]; then
+        echo "Failed to start btfs: $status"
+        exit $status
+    fi
+else
+    BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon
+    status=$?
+    if [ $status -ne 0 ]; then
+        echo "Failed to start btfs: $status"
+        exit $status
+    fi
 fi
