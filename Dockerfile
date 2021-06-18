@@ -1,6 +1,8 @@
 FROM debian:latest
 MAINTAINER Nikolay Bereznyak "beresnevn70@gmail.com"
 
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+RUN apt-get install -y -q
 RUN apt-get update && apt-get -y install openssh-server supervisor mc wget curl
 RUN mkdir /var/run/sshd
 RUN echo 'root:password' | chpasswd
