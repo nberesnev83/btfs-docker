@@ -1,6 +1,7 @@
 FROM debian:latest
 MAINTAINER Nikolay Bereznyak "beresnevn70@gmail.com"
 ENV TZ=Asia/Barnaul
+ENV NEW_WALLET=true
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN apt-get install -y -q
@@ -45,11 +46,11 @@ RUN mv /root/btfs/bin/fs-repo-migrations /usr/bin/fs-repo-migrations
 RUN mv /root/btfs/bin/btfs /usr/bin/btfs
 RUN mv /root/btfs/bin/config.yaml /etc/btfs/config.yaml
 RUN rm -rf /root/btfs
+RUN rm -f install.sh
 
 # initiate environment
 RUN echo 'BTFS_PATH="/opt/btfs"' >> /etc/environment
 RUN echo 'ENABLE_WALLET_REMOTE="true"' >> /etc/environment
-RUN BTFS_PATH="/opt/btfs" /usr/bin/btfs init
 
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
