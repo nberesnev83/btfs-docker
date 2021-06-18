@@ -22,7 +22,7 @@ if [[ ! -f "/opt/btfs/config" ]]; then
         status=$?
     fi
 
-    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon
+    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon &
     status=$?
 
     if [[ -n "$DOMAINAPI" ]]; then
@@ -41,8 +41,11 @@ if [[ ! -f "/opt/btfs/config" ]]; then
     fi
 
     killall -9 btfs
+    sleep 10
+    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon &
+    status=$?
 else
-    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon
+    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon &
     status=$?
 fi
 
