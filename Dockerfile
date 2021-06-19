@@ -140,12 +140,12 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 
 ENV NOTVISIBLE="in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
+COPY run.sh run.sh
+RUN  chmod +x run.sh
 
 EXPOSE 22
 EXPOSE 5001
 VOLUME /opt/btfs
 WORKDIR "${GOPATH}"
-COPY run.sh run.sh
-RUN  chmod +x run.sh
  
 ENTRYPOINT ["/usr/bin/tini", "--", "/run.sh"]
