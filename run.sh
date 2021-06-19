@@ -76,22 +76,32 @@ if [[ ! -f "/opt/btfs/config" ]]; then
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage announce --enable-host-mode
         sleep 1
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage announce --repair-host-enabled
-        sleep 1
+
+        killall -9 btfs
+        sleep 5
+
+        ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs daemon &
+        status=$?
+        if [[ $status -ne 0 ]]; then
+            echo "Failed to daemon btfs: $status"
+            exit $status
+        fi
+        sleep 15
         curl -X POST "http://127.0.0.1:5001/api/v1/config?arg=UI.Host.Initialized&arg=true&bool=true"
     fi
-    sleep 5
+    sleep 10
 
     killall -9 btfs
     sleep 1
 
-    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs daemon &
+    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon &
     status=$?
     if [[ $status -ne 0 ]]; then
         echo "Failed to daemon btfs: $status"
         exit $status
     fi
 else
-    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs daemon &
+    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon &
     status=$?
     if [[ $status -ne 0 ]]; then
         echo "Failed to daemon btfs: $status"
