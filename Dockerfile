@@ -84,7 +84,7 @@ COPY --from=build /usr/local/lib/go /usr/local/lib/go
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN apt-get install -y -q
-RUN apt-get update && apt-get full-upgrade -y && apt-get -y install openssh-server mc wget curl net-tools tini ca-certificates
+RUN apt-get update && apt-get full-upgrade -y && apt-get -y install openssh-server mc wget curl net-tools tini ca-certificates cron
 RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
     && chmod -R 777 "${GOPATH}" \
     && ln -s /usr/local/lib/go/bin/go /usr/bin/ \
@@ -130,6 +130,14 @@ RUN mv /root/btfs/bin/btfs /usr/bin/btfs
 RUN mv /root/btfs/bin/config.yaml /etc/btfs/config.yaml
 RUN rm -rf /root/btfs
 RUN rm -f install.sh
+
+# Download and install (btfs auto price host)
+RUN wget https://github.com/zarethernet/btfsautohostprice/archive/refs/tags/1.0.tar.gz
+RUN tar zxf 1.0.tar.gz
+RUN rm -rf 1.0.tar.gz
+RUN cd btfsautohostprice-1.0 && go build -ldflags "-s -w"
+RUN mv btfsautohostprice-1.0/btfsautohostprice /usr/bin/btfsautohostprice
+RUN rm -rf btfsautohostprice-1.0
 
 # initiate environment
 RUN echo 'BTFS_PATH="/opt/btfs"' >> /etc/environment
