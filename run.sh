@@ -67,8 +67,6 @@ if [[ ! -f "/opt/btfs/config" ]]; then
     sleep 1
 
     if [[ "$ENABLE_STORAGE" == "true" ]]; then
-        ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage path /opt/btfs $STORAGE_MAX
-        sleep 1
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage announce --host-storage-time-min=5
         sleep 1
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage announce --host-storage-max=$STORAGE_MAX
