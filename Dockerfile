@@ -5,7 +5,7 @@ ENV NEW_WALLET=true
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN apt-get install -y -q
-RUN apt-get update && apt-get full-upgrade -y && apt-get -y install openssh-server mc wget curl net-tools
+RUN apt-get update && apt-get full-upgrade -y && apt-get -y install openssh-server mc wget curl net-tools tini
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 RUN mkdir /var/run/sshd
@@ -64,4 +64,4 @@ VOLUME /opt/btfs
 COPY run.sh run.sh
 RUN  chmod +x run.sh
  
-CMD  ./run.sh
+ENTRYPOINT ["/usr/bin/tini", "--", "/run.sh"]
