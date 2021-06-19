@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 /usr/sbin/sshd
 status=$?
@@ -39,7 +40,7 @@ if [[ ! -f "/opt/btfs/config" ]]; then
     fi
     sleep 5
 
-    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon &
+    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs daemon &
     status=$?
     if [[ $status -ne 0 ]]; then
         echo "Failed to daemon btfs: $status"
@@ -55,6 +56,17 @@ if [[ ! -f "/opt/btfs/config" ]]; then
     ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST"]'
     sleep 5
 
+    killall -9 btfs
+    sleep 5
+
+    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs daemon &
+    status=$?
+    if [[ $status -ne 0 ]]; then
+        echo "Failed to daemon btfs: $status"
+        exit $status
+    fi
+    sleep 10
+
     if [[ -n "$WALLET_PASSWORD" ]]; then
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs wallet password "$WALLET_PASSWORD"
     fi
@@ -63,6 +75,16 @@ if [[ ! -f "/opt/btfs/config" ]]; then
     if [[ "$ENABLE_STORAGE" == "true" ]]; then
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs config profile apply storage-host
         sleep 5
+        killall -9 btfs
+        sleep 5
+
+        ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs daemon &
+        status=$?
+        if [[ $status -ne 0 ]]; then
+            echo "Failed to daemon btfs: $status"
+            exit $status
+        fi
+        sleep 10
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage path /opt/btfs $STORAGE_MAX
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage announce --host-storage-time-min=5
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage announce --host-storage-max=$STORAGE_MAX
@@ -75,14 +97,14 @@ if [[ ! -f "/opt/btfs/config" ]]; then
     killall -9 btfs
     sleep 5
 
-    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon &
+    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs daemon &
     status=$?
     if [[ $status -ne 0 ]]; then
         echo "Failed to daemon btfs: $status"
         exit $status
     fi
 else
-    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon &
+    ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs daemon &
     status=$?
     if [[ $status -ne 0 ]]; then
         echo "Failed to daemon btfs: $status"
