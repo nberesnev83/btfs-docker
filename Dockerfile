@@ -84,7 +84,7 @@ COPY --from=build /usr/local/lib/go /usr/local/lib/go
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN apt-get install -y -q
-RUN apt-get update && apt-get full-upgrade -y && apt-get -y --no-install-recommends install openssh-server mc wget curl net-tools tini ca-certificates perl-Digest-SHA
+RUN apt-get update && apt-get full-upgrade -y && apt-get -y install openssh-server mc wget curl net-tools tini ca-certificates
 RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
     && chmod -R 777 "${GOPATH}" \
     && ln -s /usr/local/lib/go/bin/go /usr/bin/ \
