@@ -37,6 +37,7 @@ if [[ ! -f "/opt/btfs/config" ]]; then
             exit $status
         fi
     fi
+    sleep 5
 
     ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs --api /ip4/0.0.0.0/tcp/5001 daemon &
     status=$?
@@ -44,7 +45,7 @@ if [[ ! -f "/opt/btfs/config" ]]; then
         echo "Failed to daemon btfs: $status"
         exit $status
     fi
-    sleep 15
+    sleep 10
 
     if [[ -n "$DOMAINAPI" ]]; then
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://'$DOMAINAPI':5001", "http://0.0.0.0:5001"]'
@@ -52,19 +53,24 @@ if [[ ! -f "/opt/btfs/config" ]]; then
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://0.0.0.0:5001"]'
     fi
     ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST"]'
+    sleep 5
 
     if [[ -n "$WALLET_PASSWORD" ]]; then
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs wallet password "$WALLET_PASSWORD"
     fi
+    sleep 5
 
     if [[ "$ENABLE_STORAGE" == "true" ]]; then
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs config profile apply storage-host
+        sleep 5
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage path /opt/btfs $STORAGE_MAX
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage announce --host-storage-time-min=5
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage announce --host-storage-max=$STORAGE_MAX
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage announce --enable-host-mode
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage announce --repair-host-enabled
+        curl -X POST "http://localhost:5001/api/v1/config?arg=UI.Host.Initialized&arg=true&bool=true"
     fi
+    sleep 10
 
     killall -9 btfs
     sleep 5
