@@ -53,7 +53,8 @@ if [[ ! -f "/opt/btfs/config" ]]; then
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage announce --host-storage-max=$STORAGE_MAX
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage announce --enable-host-mode
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs storage announce --repair-host-enabled
-        curl -X POST "http://127.0.0.1:5001/api/v1/config?arg=UI.Host.Initialized&arg=true&bool=true"
+        curl -X POST 'http://127.0.0.1:5001/api/v1/config?arg=UI.Host.Initialized&arg=true&bool=true'
+        curl -X POST 'http://127.0.0.1:5001/api/v1/config?arg=Datastore.StorageMax&arg='$STORAGE_MAX'GB'
     fi
 
     if [[ -n "$DOMAINAPI" ]]; then
@@ -65,6 +66,7 @@ if [[ ! -f "/opt/btfs/config" ]]; then
 
     if [[ -n "$WALLET_PASSWORD" ]]; then
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs wallet password "$WALLET_PASSWORD"
+        curl -X POST 'http://127.0.0.1:5001/api/v1/config?arg=UI.Wallet.Initialized&arg=true&bool=true'
     fi
     sleep 30
 
