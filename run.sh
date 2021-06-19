@@ -47,7 +47,7 @@ if [[ ! -f "/opt/btfs/config" ]]; then
     sleep 15
 
     if [[ -n "$DOMAINAPI" ]]; then
-        ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://$DOMAINAPI:5001", "http://0.0.0.0:5001"]'
+        ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://'$DOMAINAPI':5001", "http://0.0.0.0:5001"]'
     else
         ENABLE_WALLET_REMOTE=true BTFS_PATH="/opt/btfs" /usr/bin/btfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://0.0.0.0:5001"]'
     fi
