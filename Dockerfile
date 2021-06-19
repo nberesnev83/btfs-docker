@@ -2,6 +2,12 @@ FROM debian:latest
 MAINTAINER Nikolay Bereznyak "beresnevn70@gmail.com"
 ENV TZ=Asia/Barnaul
 ENV NEW_WALLET=true
+ENV MNEMONIC_WORDS=
+ENV PRIVATE_KEY=
+ENV DOMAINAPI=0.0.0.0
+ENV WALLET_PASSWORD=
+ENV ENABLE_STORAGE=true
+ENV STORAGE_MAX=32
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN apt-get install -y -q
